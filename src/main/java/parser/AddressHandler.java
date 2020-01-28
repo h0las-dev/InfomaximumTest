@@ -10,9 +10,6 @@ import java.util.HashMap;
 // Изначально хотел написать парсер на регулярках, на C#, например, такой вариант работает шустрее, чем аналогичный
 // XML парсер, но в итоге посчитал, что привычный читабельний код SAX парсера без костылей будет оптимальнее.
 public class AddressHandler extends DefaultHandler {
-    // Для записей-дубликатов и уникальных записей можно было бы использовать одну структуру
-    // для экономии памяти, но тогда пришлось бы проходить через весь хэш-мап для сбора статистики.
-    // К тому же повторений в файле не так уж много в общем масштабе.
     private HashMap<String, AddressQuantityStatistics> duplicateEntries = null;
     private HashMap<String, AddressQuantityStatistics> uniqueEntries = null;
     private HashMap<String, CityStatistics> cities = null;

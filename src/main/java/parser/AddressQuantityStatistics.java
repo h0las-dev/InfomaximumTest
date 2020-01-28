@@ -10,6 +10,10 @@ public class AddressQuantityStatistics {
         this.count = 1;
     }
 
+    public int getCount() {
+        return count;
+    }    
+
     public void incCount() {
         this.count++;
     }
