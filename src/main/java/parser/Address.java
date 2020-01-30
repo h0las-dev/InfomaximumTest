@@ -1,5 +1,7 @@
 package parser;
 
+import java.util.Objects;
+
 public class Address {
     private String city;
     private String street;
@@ -36,6 +38,23 @@ public class Address {
 
     public void setHouse(int house) {
         this.house = house;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getCity(), getStreet(), getHouse(), getFloor());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Address address = (Address) obj;
+        return getHouse() == address.getHouse() &&
+                getFloor() == address.getFloor() &&
+                java.util.Objects.equals(getCity(), address.getCity()) &&
+                java.util.Objects.equals(getStreet(), address.getStreet());
     }
 
     @Override

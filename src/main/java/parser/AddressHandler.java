@@ -10,16 +10,16 @@ import java.util.HashMap;
 // Изначально хотел написать парсер на регулярках, на C#, например, такой вариант работает шустрее, чем аналогичный
 // XML парсер, но в итоге посчитал, что привычный читабельний код SAX парсера без костылей будет оптимальнее.
 public class AddressHandler extends DefaultHandler {
-    private HashMap<String, AddressQuantityStatistics> duplicateEntries = null;
-    private HashMap<String, AddressQuantityStatistics> uniqueEntries = null;
+    private HashMap<Address, AddressQuantityStatistics> duplicateEntries = null;
+    private HashMap<Address, AddressQuantityStatistics> uniqueEntries = null;
     private HashMap<String, CityStatistics> cities = null;
     private Address address = null;
     private StringBuilder data = null;
 
-    public HashMap<String, AddressQuantityStatistics> getUniqueEntries() {
+    public HashMap<Address, AddressQuantityStatistics> getUniqueEntries() {
         return uniqueEntries;
     }
-    public HashMap<String, AddressQuantityStatistics> getDuplicateEntries() {
+    public HashMap<Address, AddressQuantityStatistics> getDuplicateEntries() {
         return duplicateEntries;
     }
     public HashMap<String, CityStatistics> getCities() { return cities; }
@@ -57,7 +57,6 @@ public class AddressHandler extends DefaultHandler {
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if (qName.equalsIgnoreCase(Item)) {
             this.handleAddressQuantityStatistics();
-            this.handleHousesQuantityStatistics();
         }
     }
 
@@ -68,32 +67,24 @@ public class AddressHandler extends DefaultHandler {
 
     private void handleAddressQuantityStatistics() {
         var addressQuantityStatistics = new AddressQuantityStatistics(address);
-        var addressKey = address.toString();
 
-        if (uniqueEntries.containsKey(addressKey)) {
-            if (duplicateEntries.containsKey(addressKey)) {
-                var duplicateEntry = duplicateEntries.get(addressKey);
-                duplicateEntry.incCount();
-            }
-            else {
-                addressQuantityStatistics.incCount();
-                duplicateEntries.put(addressKey, addressQuantityStatistics);
-            }
+        if (uniqueEntries.containsKey(address)) {
+            var currentEntry = duplicateEntries.getOrDefault(address, addressQuantityStatistics);
+            currentEntry.incCount();
+            duplicateEntries.put(address, currentEntry);
         } else {
-            uniqueEntries.put(addressKey, addressQuantityStatistics);
+            uniqueEntries.put(address, addressQuantityStatistics);
+
+            this.handleHousesQuantityStatistics();
         }
     }
 
     private void handleHousesQuantityStatistics() {
         var cityKey = address.getCity();
+        var cityStatistics = new CityStatistics(cityKey);
 
-        if (cities.containsKey(cityKey)) {
-            var cityStatistics = cities.get(cityKey);
-            cityStatistics.incHouses(address.getFloor());
-        } else {
-            var cityStatistics = new CityStatistics(address.getCity());
-            cityStatistics.incHouses(address.getFloor());
-            cities.put(cityKey, cityStatistics);
-        }
+        var currentEntry = cities.getOrDefault(cityKey, cityStatistics);
+        currentEntry.incHouses(address.getFloor());
+        cities.put(cityKey, currentEntry);
     }
 }

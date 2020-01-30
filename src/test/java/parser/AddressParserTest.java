@@ -77,7 +77,7 @@ public class AddressParserTest extends TestCase {
 
         assertEquals(1, addressHandler.getDuplicateEntries().size());
         assertEquals(1, addressHandler.getCities().size());
-        assertArrayEquals(new int [] {2,0,0,0,0}, addressHandler.getCities().get("буденновск").getHouses());
+        assertArrayEquals(new int [] {1,0,0,0,0}, addressHandler.getCities().get("буденновск").getHouses());
     }
 
     @Test
@@ -96,7 +96,7 @@ public class AddressParserTest extends TestCase {
 
         assertEquals(1, addressHandler.getDuplicateEntries().size());
         assertEquals(1, addressHandler.getCities().size());
-        assertArrayEquals(new int [] {2,0,0,0,0}, addressHandler.getCities().get("буденновск").getHouses());
+        assertArrayEquals(new int [] {1,0,0,0,0}, addressHandler.getCities().get("буденновск").getHouses());
     }
 
     @Test
@@ -116,7 +116,7 @@ public class AddressParserTest extends TestCase {
 
         assertEquals(1, addressHandler.getDuplicateEntries().size());
         assertEquals(2, addressHandler.getCities().size());
-        assertArrayEquals(new int [] {2,0,0,0,0}, addressHandler.getCities().get("буденновск").getHouses());
+        assertArrayEquals(new int [] {1,0,0,0,0}, addressHandler.getCities().get("буденновск").getHouses());
         assertArrayEquals(new int [] {1,0,0,0,0}, addressHandler.getCities().get("саранск").getHouses());
     }
 }
